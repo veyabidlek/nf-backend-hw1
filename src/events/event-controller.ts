@@ -22,8 +22,15 @@ class EventController {
 
   getEvents = async (req: Request, res: Response): Promise<void> => {
     try {
+      const { page, size, sortBy, sortDirection } = req.query;
       const user = await userSchema.findById((req.user as any).id).exec();
-      const events = await this.eventService.getEvents(user?.city);
+      const events = await this.eventService.getEvents(
+        user?.city,
+        Number(page),
+        Number(size),
+        String(sortBy),
+        String(sortDirection)
+      );
       res.status(200).json(events);
     } catch (error: any) {
       res.status(500).send({ error: error.message });
